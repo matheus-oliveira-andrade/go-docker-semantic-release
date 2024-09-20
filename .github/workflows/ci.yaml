@@ -73,6 +73,9 @@ jobs:
           docker build -t "$DOCKERHUB_USERNAME/$IMAGE_TAG" .
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
       - name: push image
         shell: bash
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_TAG
+        run: docker push "$DOCKERHUB_USERNAME/$IMAGE_TAG"
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
