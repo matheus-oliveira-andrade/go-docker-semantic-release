@@ -1,0 +1,75 @@
+name: CI
+on:
+  push: 
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: build
+        shell: bash
+        run: go build -v ./...  
+
+
+  semantic-release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:    
+          persist-credentials: false
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # change to LTS        
+
+      - run: npm i semantic-release @semantic-release/exec             
+
+      - name: semantic-release
+        run: npx semantic-release      
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+
+      - run: cat version.txt 
+
+      - name: upload version file
+        uses: actions/upload-artifact@v4
+        with:
+          name: versionfile
+          path: version.txt 
+
+  build-push:
+    runs-on: ubuntu-latest
+    needs: semantic-release
+    steps:
+      - uses: actions/checkout@v4
+        with:    
+          persist-credentials: false 
+
+      - name: docker Hub log
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: download version file
+        uses: actions/download-artifact@v4
+        with:
+          name: versionfile
+          path: ./
+
+      - name: build and tag image
+        shell: bash
+        run:  |
+          VERSION=$(cat test.txt)
+          IMAGE_TAG="go-hello-world:$VERSION"
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_TAG .
+
+      - name: push image
+        shell: bash
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_TAG
