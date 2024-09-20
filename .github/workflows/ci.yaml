@@ -67,9 +67,10 @@ jobs:
 
       - name: build and tag image
         shell: bash
-        run:  |
+        run: |
           VERSION=$(cat version.txt)
           IMAGE_TAG="go-hello-world:$VERSION"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           docker build -t "$DOCKERHUB_USERNAME/$IMAGE_TAG" .
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -79,3 +80,4 @@ jobs:
         run: docker push "$DOCKERHUB_USERNAME/$IMAGE_TAG"
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
