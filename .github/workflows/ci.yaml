@@ -68,7 +68,7 @@ jobs:
       - name: build and tag image
         shell: bash
         run:  |
-          VERSION=$(cat test.txt)
+          VERSION=$(cat version.txt)
           IMAGE_TAG="go-hello-world:$VERSION"
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_TAG .
 
