@@ -2,6 +2,8 @@ name: CI/CD
 on:
   push: 
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +17,7 @@ jobs:
 
 
   semantic-release:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -28,7 +31,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # change to LTS        
+          node-version: '20'        
 
       - run: npm i semantic-release @semantic-release/exec             
 
@@ -44,6 +47,7 @@ jobs:
           path: version.txt 
 
   iamge-build-push:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: semantic-release
     steps:
