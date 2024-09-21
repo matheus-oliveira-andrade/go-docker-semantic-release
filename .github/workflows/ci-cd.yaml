@@ -40,6 +40,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
 
+      - name: check was generated version
+        run: |
+          if [ ! -f "version.txt" ]; then
+            echo "No new versions generated"
+            exit 1
+          fi
+
       - name: upload version file
         uses: actions/upload-artifact@v4
         with:
