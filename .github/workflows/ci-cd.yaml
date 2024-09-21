@@ -28,7 +28,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # change to LTS        
+          node-version: '20'        
 
       - run: npm i semantic-release @semantic-release/exec             
 
