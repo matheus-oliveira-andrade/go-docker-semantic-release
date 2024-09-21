@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 on:
   push: 
     branches: [ master ]
@@ -43,7 +43,7 @@ jobs:
           name: versionfile
           path: version.txt 
 
-  build-push:
+  iamge-build-push:
     runs-on: ubuntu-latest
     needs: semantic-release
     steps:
