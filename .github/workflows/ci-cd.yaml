@@ -96,7 +96,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: | 
-            "$DOCKERHUB_USERNAME/$IMAGE_TAG_VERSION"
-            "$DOCKERHUB_USERNAME/$IMAGE_TAG_VERSION"
+            $DOCKERHUB_USERNAME/$IMAGE_TAG_LATEST
+            $DOCKERHUB_USERNAME/$IMAGE_TAG_VERSION
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
