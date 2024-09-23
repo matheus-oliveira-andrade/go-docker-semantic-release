@@ -84,8 +84,11 @@ jobs:
           IMAGE_TAG_VERSION="$IMAGE_NAME:$VERSION"
           IMAGE_TAG_LATEST="$IMAGE_NAME:latest"
 
-          echo "IMAGE_TAG_VERSION=$IMAGE_TAG_VERSION" >> $GITHUB_ENV
-          echo "IMAGE_TAG_LATEST=$IMAGE_TAG_LATEST" >> $GITHUB_ENV          
+          FULL_NAME_TAG_LATEST="$DOCKERHUB_USERNAME/$IMAGE_TAG_LATEST"
+          FULL_NAME_TAG_VERSION="$DOCKERHUB_USERNAME/$IMAGE_TAG_VERSION"
+
+          echo "FULL_NAME_TAG_VERSION=$FULL_NAME_TAG_VERSION" >> $GITHUB_ENV
+          echo "FULL_NAME_TAG_LATEST=$FULL_NAME_TAG_LATEST" >> $GITHUB_ENV                 
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
@@ -96,7 +99,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: | 
-            $(DOCKERHUB_USERNAME)/$(IMAGE_TAG_LATEST)
-            $(DOCKERHUB_USERNAME)/$(IMAGE_TAG_VERSION)
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+            ${{ env.FULL_NAME_TAG_VERSION }}
+            ${{ env.FULL_NAME_TAG_LATEST }}
